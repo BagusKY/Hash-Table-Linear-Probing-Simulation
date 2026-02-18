@@ -1,0 +1,287 @@
+Baik. Kita bedah kode ini bukan sekadar “apa fungsinya”, tapi **apa konsep struktur datanya**, lalu kita analogikan dengan **parkiran mobil** supaya intuitif.
+
+Kita fokus ke inti struktur data:
+👉 **Hash Table dengan Linear Probing**
+
+---
+
+# 🔎 1️⃣ Gambaran Besar Program
+
+Program ini:
+
+* Membuat **Hash Table**
+* Memasukkan beberapa key
+* Jika terjadi tabrakan (collision), dia geser ke slot berikutnya (linear probing)
+* Menampilkan prosesnya dalam bentuk animasi
+* Bisa pause, step, restart
+
+Jadi ini bukan sekadar program biasa — ini **simulasi visual struktur data**.
+
+---
+
+# 🚗 2️⃣ Analogi Parkiran Mobil
+
+Bayangkan:
+
+* Ada **parkiran dengan 20 slot**
+* Setiap mobil punya **nomor unik**
+* Nomor mobil menentukan slot parkir awalnya
+
+Misalnya:
+
+```
+slot = nomor_mobil % jumlah_slot
+```
+
+Kalau slot itu kosong → langsung parkir
+Kalau penuh → geser ke kanan sampai ketemu slot kosong
+
+Itulah **linear probing**.
+
+---
+
+# 🧠 3️⃣ Fungsi `plan_inserts()`
+
+```python
+def plan_inserts(keys, size=20):
+```
+
+Ini adalah “simulasi parkir mobil”.
+
+### Parameter:
+
+* `keys` → daftar mobil
+* `size` → jumlah slot parkir
+
+---
+
+## 🔹 Bagian Penting:
+
+```python
+start = hash(key) % size
+```
+
+📌 Artinya:
+Mobil datang → sistem hitung slot awal.
+
+Dalam analogi:
+
+> Satpam lihat nomor mobil → tentukan slot awal.
+
+---
+
+## 🔹 Kalau Slot Penuh?
+
+```python
+while table[idx] is not None:
+```
+
+Artinya:
+Kalau slot sudah ada mobil → geser ke kanan.
+
+```python
+idx = (idx + 1) % size
+```
+
+Ini seperti:
+
+> “Slot ini penuh? Oke maju satu slot.”
+
+Kenapa `% size`?
+Supaya kalau sudah di slot terakhir, kembali ke awal parkiran.
+
+---
+
+## 🔹 Setelah Dapat Slot Kosong
+
+```python
+table[idx] = key
+```
+
+Mobil parkir.
+
+---
+
+## 🔹 Load Factor
+
+```python
+lf = jumlah_terisi / size
+```
+
+Ini seperti:
+
+> Seberapa penuh parkiran sekarang?
+
+Kalau parkiran makin penuh → makin sering terjadi tabrakan.
+
+Dalam struktur data:
+
+* Load factor tinggi → performa makin lambat
+
+---
+
+# 🎬 4️⃣ Bagian Animasi
+
+Bagian ini hanya untuk visualisasi:
+
+```python
+FuncAnimation(...)
+```
+
+Dia tidak mengubah struktur data.
+Dia hanya menampilkan prosesnya langkah demi langkah.
+
+---
+
+# 🎮 5️⃣ Keyboard Control
+
+Bagian ini:
+
+```python
+fig.canvas.mpl_connect("key_press_event", on_key)
+```
+
+Itu seperti remote control:
+
+* SPACE → pause
+* → → maju satu langkah
+* ← → mundur
+* R → restart
+* Q → keluar
+
+---
+
+# 🏗 6️⃣ Struktur Data yang Dipakai
+
+Struktur utama:
+
+```python
+table = [None] * size
+```
+
+Ini adalah:
+👉 **Array statis**
+
+Kenapa array?
+Karena:
+
+* Ukurannya tetap
+* Akses berdasarkan index
+* Hash table memang berbasis array
+
+---
+
+# 📊 7️⃣ Kenapa Collision Terjadi?
+
+Karena:
+
+```
+hash(key1) % size == hash(key2) % size
+```
+
+Dalam analogi parkiran:
+
+Dua mobil punya nomor yang menghasilkan slot awal yang sama.
+
+---
+
+# ⚠️ 8️⃣ Risiko Linear Probing
+
+Sekarang kita masuk ke level analisis (bukan sekadar deskripsi).
+
+Asumsi yang sering dianggap benar:
+
+> “Linear probing itu sederhana dan bagus.”
+
+Tapi seorang skeptis akan bilang:
+
+❗ Kalau parkiran hampir penuh:
+
+* Mobil akan muter lama
+* Waktu pencarian slot meningkat drastis
+
+Ini disebut:
+👉 **Primary Clustering**
+
+Artinya:
+Slot kosong makin jarang → tabrakan makin sering → probing makin panjang.
+
+---
+
+# 🧪 Contoh Sederhana
+
+Misal parkiran 5 slot:
+
+```
+Slot: 0 1 2 3 4
+```
+
+Mobil datang:
+
+```
+A → 2
+B → 2 (tabrakan → ke 3)
+C → 2 (tabrakan → 3 penuh → ke 4)
+D → 2 (tabrakan → 3 → 4 → 0)
+```
+
+Lihat polanya?
+Terbentuk “rantai panjang”.
+
+Itulah efek clustering.
+
+---
+
+# 🎯 9️⃣ Inti Konsep Struktur Data di Kode Ini
+
+1. Hashing
+2. Collision handling
+3. Linear probing
+4. Load factor
+5. Visualisasi proses
+
+Ini bukan cuma animasi — ini demonstrasi:
+
+> Bagaimana performa hash table berubah saat load factor naik.
+
+---
+
+# 🧠 10️⃣ Kalau Dosen Tanya Lebih Dalam
+
+Beberapa pertanyaan yang mungkin muncul:
+
+### ❓ Kenapa pakai modulo?
+
+Supaya hasil hash masuk ke rentang index array.
+
+### ❓ Kenapa linear probing?
+
+Karena sederhana dan memanfaatkan array kontigu.
+
+### ❓ Kelemahannya?
+
+Primary clustering.
+
+### ❓ Solusi lain?
+
+* Quadratic probing
+* Double hashing
+* Separate chaining
+
+---
+
+# 🎓 Kesimpulan Versi Singkat
+
+Program ini mensimulasikan:
+
+> Parkiran mobil dengan aturan: kalau slot awal penuh, maju satu-satu sampai kosong.
+
+Secara struktur data:
+
+* Array → tempat parkir
+* Hash function → menentukan slot awal
+* Linear probing → strategi mengatasi tabrakan
+* Load factor → indikator kepadatan
+
+---
+
