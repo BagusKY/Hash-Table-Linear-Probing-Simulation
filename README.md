@@ -251,7 +251,3 @@ Memahami konsep ini sangat penting sebelum mempelajari topik lanjutan seperti:
 Nama: M. Bagus Kuncoro Yekti
 Mata Kuliah: Struktur Data
 Semester: 2
-
-
-
-Kamu ingin README ini sekadar cukup… atau sekalian dibuat terlihat seperti mahasiswa yang benar-benar paham konsep hashing?
